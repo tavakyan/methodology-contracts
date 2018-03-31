@@ -15,10 +15,10 @@ import 'Seasons.sol';
 contract CarpoolMonitoringClient { // is Ownable {
 
   struct CommuterAccount {
+    byte32 mobileIdHash;
+
     uint[NumSeasons] daysPerWeekCarpooled;
     uint[NumSeasons] daysPerWeekCommuteAlone;
-
-    byte32 mobileIdHash;
 
     // Can use zksnarks for verifying address from client and server.
     // (https://media.consensys.net/introduction-to-zksnarks-with-examples-3283b554fc3b)
@@ -33,7 +33,7 @@ contract CarpoolMonitoringClient { // is Ownable {
     uint8 baselineEmissionQuantificationCoeff;
   }
 
-  mapping (address => CarpoolAppAccount) commuterAccounts;
+  mapping (address => CommuterAccount) commuterAccounts;
 
   event commuterInformationUpdated;
 }

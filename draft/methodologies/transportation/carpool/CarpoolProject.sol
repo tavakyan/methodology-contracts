@@ -6,7 +6,7 @@ contract CarpoolProject {
 contract CarpoolProjectFactory {
   modifier isEligible() public returns (bool) {
     // check stuff
-    _; 
+    _;
   }
 
   function create() public isEligible() {

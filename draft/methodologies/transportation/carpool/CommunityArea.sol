@@ -1,9 +1,8 @@
-import "additionality.sol";
+import "AdditionalityService.sol";
 
 contract CommunityArea {
   bool isCarpoolMandated;
   bool alternativeTransportAvailable;
-
 }
 
 // Should this data come from an oracle, be curated (see below) or be hard coded...

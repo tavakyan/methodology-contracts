@@ -1,6 +1,6 @@
 pragma solidity ^0.4.22;
 
-library AdditionalityUtility {
+contract AdditionalityService {
 
   enum TransporationModality {
       Carpool,
@@ -76,12 +76,12 @@ library AdditionalityUtility {
   }
 
   //
-  // m is an array of market share percentage (0-100) indexed by the transporation modality enum.
+  // marketShares is an array of market share percentages (0-100) indexed by the transporation modality enum.
   // returns: If true then it does not meet additionality
   //
-  function meetsAdditionality(uint[] m) indexInRange(m, commutingIndex) returns (bool) {
+  function meetsAdditionality(uint[] marketShares) indexInRange(marketShares, commutingIndex) returns (bool) {
     // Only Carpool & Vanpool applicable to methodology
-    if (_meetsAdditionality(m, TransporationModality.Carpool) || _meetsAdditionality(m, TransporationModality.Vanpool)) {
+    if (_meetsAdditionality(marketShares, TransporationModality.Carpool) || _meetsAdditionality(m, TransporationModality.Vanpool)) {
       return true;
     }
     return false;

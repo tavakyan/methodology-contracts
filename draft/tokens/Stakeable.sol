@@ -1,7 +1,6 @@
 // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-900.md
-// Need staking service for c4coin
-// Another alternative is to use rocketpool code, modify it and treat each validator as a staking pool 
-interface Staking {
+// Another alternative is to use rocketpool code, modify it and treat each validator as a staking pool
+interface Stakeable {
 
     event Staked(address indexed user, uint256 amount, uint256 total, bytes data);
     event Unstaked(address indexed user, uint256 amount, uint256 total, bytes data);
