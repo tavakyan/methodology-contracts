@@ -1,13 +1,31 @@
-contract CommunityArea {
+import "additionality.sol";
+
+library CommunityUtility {
   // Only Carpool & Vanpool applicable to methodology
-  enum Modality {
+  enum TransporationModality {
       Carpool,
       Vanpool,
       Bus,
       Train
   }
 
-  bool alternativeTransportAvailable public; 
+  uint constant NumModalities = 4;
+
+  function getTransportationModalityId(TransporationModality t) public pure returns (uint) {
+    return uint(t);
+  }
+
+  modifier transpModIndexedArrayIsValid(uint[] tModalityIndexedArray) {
+    require(tModalityIndexedArray.length == NumModalities);
+    _;
+  }
+}
+
+contract CommunityArea {
+  bool isCarpoolMandated;
+  bool alternativeTransportAvailable;
+
+
 
   // Maybe use a factory to create baseline service given modality of moniotring service provider?
   /* function TransportationMethodologyFactory(Modality m) public (returns CommuteMethodology) {
@@ -22,14 +40,8 @@ contract CommunityArea {
       }
   } */
 
-  /* mapping (string => Waypoint) cityLocation; */
-
-  // Herfindahl-Hirschman Index (HHI) -  indicator of the amount of competition among commuting modes  derived from the market share of each commuting mode
 
 
-  function herfindahlHirschmanIndex(marketShare[] m) public (returns uint) {
-
-  }
 }
 
 // Should this data come from an oracle, be curated (see below) or be hard coded...

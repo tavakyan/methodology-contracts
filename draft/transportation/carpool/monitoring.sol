@@ -1,4 +1,22 @@
+pragma solidity ^0.4.22;
+
 // Can also be called CarpoolServiceEndpoint / API - Basically Hytch's API
+contract CarpoolManagementServer {
+
+}
+
+/* contract MonitoringService {
+
+  // has cmas
+  // has a carpool server
+
+}
+
+
+contract CarpoolMonitoringAppManager {
+
+}
+
 contract MonitoringServiceAgent {
   struct CarpoolAppAccount {
     byte32 mobileIdHash;
@@ -13,16 +31,4 @@ contract MonitoringServiceAgent {
     uint8 preprogramCarpoolCoeff;
     uint8 baselineEmissionQuantificationCoeff;
   }
-}
-
-contract MonitoringService {
-
-  // has cmas
-  // has a carpool server
-
-}
-
-
-contract CarpoolMonitoringAppManager {
-
-}
+} */

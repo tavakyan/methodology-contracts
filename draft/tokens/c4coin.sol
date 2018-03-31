@@ -1,4 +1,5 @@
 /*
+// Not sure if this is a CDR project standard
 Library ERUtil {
   function emissionsReduction(uint baseline, uint project, uint leakage) public (returns uint) {
     // modifier to make sure baseline - emissions - leakage > 0
