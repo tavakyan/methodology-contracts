@@ -12,6 +12,7 @@ library AdditionalityUtility {
 
   uint constant NumModalities = 4;
   uint public MinHHI = 2500;
+  
   modifier transpModIndexedArrayIsValid(uint[] tModalityIndexedArray) {
     require(tModalityIndexedArray.length == NumModalities);
     _;
@@ -68,13 +69,18 @@ library AdditionalityUtility {
     return false;
   }
 
-  //
-  // If true then it does not meet additionality
-  //
-  function meetAdditionality(uint[] m, uint commutingIndex) indexInRange(m, commutingIndex) returns (bool) {
+  function _meetsAdditionality(uint[] m, uint commutingIndex) returns (bool) {
     if (_dominantMarketExists(m) && _isDominantMarket(m, commutingIndex)) {
       return false;
     }
     return true;
+  }
+
+  //
+  // If true then it does not meet additionality
+  //
+  function meetsAdditionality(uint[] m, TransporationModality t) indexInRange(m, commutingIndex) returns (bool) {
+    uint commutingIndex = uint(t);
+    return _meetsAdditionality(m, t);
   }
 }
