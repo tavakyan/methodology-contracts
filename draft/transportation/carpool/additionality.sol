@@ -26,6 +26,14 @@ library AdditionalityUtility {
     return uint(t);
   }
 
+  function _herfindahlHirschmanIndex(uint[] m) private returns (uint) {
+    uint hhi = 0;
+    for(uint i = 0; i < m.length; i++) {
+      hhi = m[i]*m[i];
+    }
+    return hhi;
+  }
+
   function _herfindahlHirschmanIndex(uint[] m, uint excludeIndex) private returns (uint) {
     uint hhi = 0;
     for(uint i = 0; i < m.length; i++) {
@@ -46,13 +54,27 @@ library AdditionalityUtility {
     return true;
   }
 
-  //
-  // If true then it does not meet additionality
-  //
-  function isDominantMarket(uint[] m, uint index) indexInRange(m, index) returns (bool) {
+  function _isDominantMarket(uint[] m, uint index) returns (bool) {
     if (_isLargerestMarketShare(m, index) || _herfindahlHirschmanIndex(m, index) < MinHHI) {
       return true;
     }
     return false;
+  }
+
+  function _dominantMarketExists(uint[] m) returns (bool) {
+    if (_herfindahlHirschmanIndex(m) >= MinHHI) {
+      return true;
+    }
+    return false;
+  }
+
+  //
+  // If true then it does not meet additionality
+  //
+  function meetAdditionality(uint[] m, uint commutingIndex) indexInRange(m, commutingIndex) returns (bool) {
+    if (_dominantMarketExists(m) && _isDominantMarket(m, commutingIndex)) {
+      return false;
+    }
+    return true;
   }
 }
