@@ -1,9 +1,3 @@
-pragma solidity ^0.4.22;
-
-// Can also be called CarpoolServiceEndpoint / API - Basically Hytch's API
-contract CarpoolManagementServer {
-
-}
 
 /* contract MonitoringService {
 

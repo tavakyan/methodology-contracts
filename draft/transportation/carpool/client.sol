@@ -12,11 +12,11 @@ pragma solidity ^0.4.22;
 
 import 'Seasons.sol';
 
-contract CarpoolMonitoringApp { // is Ownable {
+contract CarpoolMonitoringClient { // is Ownable {
 
-  struct CarpoolAppAccount {
-    uint[Seasons] daysPerWeekCarpooled;
-    uint[Seasons] daysPerWeekCommuteAlone;
+  struct CommuterAccount {
+    uint[NumSeasons] daysPerWeekCarpooled;
+    uint[NumSeasons] daysPerWeekCommuteAlone;
 
     byte32 mobileIdHash;
 
@@ -30,9 +30,8 @@ contract CarpoolMonitoringApp { // is Ownable {
 
     // Can trust server to send vehicle distance.
     uint baselineTripDistance;
+    uint8 baselineEmissionQuantificationCoeff;
   }
-
-  uint8 baselineEmissionQuantificationCoeff;
 
   mapping (address => CarpoolAppAccount) commuterAccounts;
 
