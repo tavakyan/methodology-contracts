@@ -2,7 +2,6 @@ pragma solidity ^0.4.22;
 
 library AdditionalityUtility {
 
-  // Only Carpool & Vanpool applicable to methodology
   enum TransporationModality {
       Carpool,
       Vanpool,
@@ -12,7 +11,7 @@ library AdditionalityUtility {
 
   uint constant NumModalities = 4;
   uint public MinHHI = 2500;
-  
+
   modifier transpModIndexedArrayIsValid(uint[] tModalityIndexedArray) {
     require(tModalityIndexedArray.length == NumModalities);
     _;
@@ -77,10 +76,14 @@ library AdditionalityUtility {
   }
 
   //
-  // If true then it does not meet additionality
+  // m is an array of market share percentage (0-100) indexed by the transporation modality enum.
+  // returns: If true then it does not meet additionality
   //
-  function meetsAdditionality(uint[] m, TransporationModality t) indexInRange(m, commutingIndex) returns (bool) {
-    uint commutingIndex = uint(t);
-    return _meetsAdditionality(m, t);
+  function meetsAdditionality(uint[] m) indexInRange(m, commutingIndex) returns (bool) {
+    // Only Carpool & Vanpool applicable to methodology
+    if (_meetsAdditionality(m, TransporationModality.Carpool) || _meetsAdditionality(m, TransporationModality.Vanpool)) {
+      return true;
+    }
+    return false;
   }
 }
