@@ -16,21 +16,28 @@ contract CarpoolMonitoringClient { // is Ownable {
 
   struct CommuterAccount {
     byte32 mobileIdHash;
+    // p 15 says CMMS needs login token (like Facebook login) likely to correlate with identity
+    // not sure if we need to verify the CMA and CMMS match the login token hash, but leaving this here just in case
+    byte32 identifierTokenHash;
 
     uint[NumSeasons] daysPerWeekCarpooled;
     uint[NumSeasons] daysPerWeekCommuteAlone;
 
     // Can use zksnarks for verifying address from client and server.
     // (https://media.consensys.net/introduction-to-zksnarks-with-examples-3283b554fc3b)
+    // Perhaps non-of-these are needed on-chain, but the CMMS server def. needs it.
     byte32 residentialAddressHash;
     byte32 workAddressHash;
     bool homeAddressVerified;
     bool workAddressVerified;
     bytes32 baselineTripVehicleHash;
+    
+    fixed baselineEmissionQuantificationCoeff; // beqc to validate if person qualifies for methodology
 
-    // Can trust server to send vehicle distance.
-    uint baselineTripDistance;
-    uint8 baselineEmissionQuantificationCoeff;
+    uint baselineDistanceWork;
+    uint baselineDistanceHome;
+
+    uint
   }
 
   mapping (address => CommuterAccount) commuterAccounts;

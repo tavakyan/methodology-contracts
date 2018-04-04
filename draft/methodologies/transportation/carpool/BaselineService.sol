@@ -13,6 +13,7 @@ contract BaselineService {
     WorkFromHome
   };
 
+
   function preprogramCarpoolCoeff(uint[] daysPerWeekCarpooled)
     public seasonIndexedArrayIsValid(daysPerWeekCarpooled) returns (ufixed)
   {
@@ -21,6 +22,7 @@ contract BaselineService {
       sumCarpoolsInSeasons += daysPerWeekCarpooled[s].daysPerWeek;
     }
     // Not yet supported - See https://github.com/ethereum/solidity/pull/3389 - seems nearing completion
+    // Not sure if cast is valid / supported even if it type was implemented.
     ufixed pcc = ufixed(sumCarpoolsInSeasons) / ufixed(WorkdaysInWeek * NumSeasons);
     return pcc;
   }
@@ -91,5 +93,48 @@ contract BaselineService {
       return true;
     }
     return false;
+  }
+
+  enum Vehicle {
+    FossilFuel, // FFV - Fossil Fuel vehicle
+    Electric, // PEV - PLugin electric vehicle
+    HybridElectric, // PHEV - Plugin hybrid electric vehicle
+  }
+
+  struct VehicleData {
+    Vehicle vehicle,
+    ufixed distance;  // distance in km
+    ufixed allElectricRange; // distance in km
+    ufixed electricEfficiency, // in distance / kw
+    ufixed electricityGenEmissionFactor, // in tons per kwH
+    ufixed fuelEfficiency, // in liters per km
+    ufixed emissionFactor_tCo2PerL,
+  }
+
+  // Returns tons of Co2 (or perhaps kg if we convert with *1000)
+  function _emissionsElectric(VehicleData vData) private returns (uint) {
+    var distance, electricEfficiency, electricityGenEmissionFactor = (vData.distance, ..) // unpack
+    return distance * electricEfficiency * electricityGenEmissionFactor;
+  }
+
+  // Returns tons of Co2 (or perhaps kg if we convert with *1000 and return uint)
+  function _emissionsFossilFuel(VehicleData vData) private returns (uint) {
+    var distance, fuelEfficiency,
+    return distanceKm * electricityGentCo2perKwh * fossilFuelEfficiencyLitersPerKm * emissionFactor_tCo2PerL; // * 1000?
+  }
+
+  function _emissionPluginElectricHybrid(VehicleData v ) private returns (uint) {
+    return _emissionElectric(max(0, vData.distance - vData.allElectricRange ), vData) +
+      _emissionsFossilFuel(min(vData.distance, vData.allElectricRange), vData); 
+  }
+
+  fixed emissionCalc(VehicleData vData) returns (uint) {
+    if (vData.v == Vehicle.FossilFuel ) {
+      return emissionsFossilFuel(vData);
+    } else if (vData.vehicle == Vehicle.Electric) {
+      return _emissionElectric(vData);
+    } else {
+      return _emissionHybridElectric(vData);
+    }
   }
 }
