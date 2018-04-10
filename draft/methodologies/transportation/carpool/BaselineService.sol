@@ -103,38 +103,52 @@ contract BaselineService {
 
   struct VehicleData {
     Vehicle vehicle,
-    ufixed distance;  // distance in km
     ufixed allElectricRange; // distance in km
     ufixed electricEfficiency, // in distance / kw
     ufixed electricityGenEmissionFactor, // in tons per kwH
     ufixed fuelEfficiency, // in liters per km
-    ufixed emissionFactor_tCo2PerL,
+    ufixed emissionFactor
   }
 
+  /* struct TripData {
+    ufixed distance;  // distance in km (from home to work + from work to home)
+    VehicleData vData;
+  } */
+
   // Returns tons of Co2 (or perhaps kg if we convert with *1000)
-  function _emissionsElectric(VehicleData vData) private returns (uint) {
-    var distance, electricEfficiency, electricityGenEmissionFactor = (vData.distance, ..) // unpack
+  function _emissionsElectric(uint distance, VehicleData vData) private returns (uint) {
+    var electricEfficiency, electricityGenEmissionFactor = (v.electricEfficiency, ..) // unpack
     return distance * electricEfficiency * electricityGenEmissionFactor;
   }
 
   // Returns tons of Co2 (or perhaps kg if we convert with *1000 and return uint)
-  function _emissionsFossilFuel(VehicleData vData) private returns (uint) {
-    var distance, fuelEfficiency,
+  function _emissionsFossilFuel(uint distance, VehicleData vData) private returns (uint) {
+    var distance = t.distance;
+    var fuelEfficiency, emissionFactor = (t.vData.distance, ...) // unpack
     return distanceKm * electricityGentCo2perKwh * fossilFuelEfficiencyLitersPerKm * emissionFactor_tCo2PerL; // * 1000?
   }
 
-  function _emissionPluginElectricHybrid(VehicleData v ) private returns (uint) {
+  function _emissionPluginElectricHybrid(uint distance, VehicleData vData) private returns (uint) {
+    var distance = t.distance;
+    var fuelEfficiency, emissionFactor = (t.vData.distance, ...) // unpack
     return _emissionElectric(max(0, vData.distance - vData.allElectricRange ), vData) +
-      _emissionsFossilFuel(min(vData.distance, vData.allElectricRange), vData); 
+      _emissionsFossilFuel(min(vData.distance, vData.allElectricRange), vData);
   }
 
-  fixed emissionCalc(VehicleData vData) returns (uint) {
-    if (vData.v == Vehicle.FossilFuel ) {
-      return emissionsFossilFuel(vData);
-    } else if (vData.vehicle == Vehicle.Electric) {
-      return _emissionElectric(vData);
+  // Returns tons of Co2 (or perhaps kg if we convert with *1000)
+  function emissionCalc(uint distance, VehicleData vData) returns (uint) {
+    uint d = distance;
+    Vehicle v = vData.vehicle;
+    if (v == Vehicle.FossilFuel ) {
+      return emissionsFossilFuel(d, v);
+    } else if (v == Vehicle.Electric) {
+      return _emissionElectric(d, t);
     } else {
-      return _emissionHybridElectric(vData);
+      return _emissionHybridElectric(d, v);
     }
   }
+}
+
+contract ProjectService {
+  
 }

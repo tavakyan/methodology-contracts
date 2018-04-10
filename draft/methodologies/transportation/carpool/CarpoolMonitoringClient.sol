@@ -31,16 +31,20 @@ contract CarpoolMonitoringClient { // is Ownable {
     bool homeAddressVerified;
     bool workAddressVerified;
     bytes32 baselineTripVehicleHash;
-    
-    fixed baselineEmissionQuantificationCoeff; // beqc to validate if person qualifies for methodology
+
+    fixed baselineEmissionQuantificationCoeff;
 
     uint baselineDistanceWork;
     uint baselineDistanceHome;
 
-    uint
+    function baselineDistance() external returns (uint) {
+      return this.baselineDistanceWork + this.baselineDistanceHome;
+    }
+
+    VehicleData vData; 
   }
 
-  mapping (address => CommuterAccount) commuterAccounts;
+  mapping (address => CommuterAccount) public commuterAccounts;
 
   event commuterInformationUpdated;
 }

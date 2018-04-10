@@ -1,26 +1,43 @@
 // We need a collection of these to represent carpool membership throughout parts of trip
-contract SubTrip is Trip {
-  address[] public commuters; // membership set
+contract SubTrip {
+  /* address[] public commuters; // membership set */
   bytes32 public vehicleHash;
   uint year;
+
+  uint distance;
+
+  function projectEmission() {
+    return emissionsFossilFuels + emissionsElectricityGenCharge;
+  }
 }
 
 contract Trip {
-  Subtrip[] subTrips;
   uint year;
+  address[] public commuters;
+  CarpoolMonitoringClient client;
 
-  function getCommuters() public returns (address[]){
-    // sum of all commuters åin subTrips
-    address[] allCommuters;
-    for(uint i=0; i < subTrips.length; i++) {
-      for(uint j=0; j< subTrips[i].commuters.length; j++) {
-        allCommuters.push(subTrips[i].commuters[j]);
-      }
-    }
-    return allCommuters;
+  BaselineService baselineService;
+
+  function Trip(uint _year, address[] _commuters, CarpoolMonitoringClient _client) public {
+    year = _year;
+    commuters = _commuters;
+    client = _client;
   }
 
+  function projectEmissinons() {
 
+  }
+  // Move to baseline service?
+  function baselineEmissions() public returns () {
+    uint totalBaselineEmissions = 0;
+    for(var i=0; i<commuters.length; i++) {
+      CommuterAccount commuterAccount = client.commuterAccounts[commuters[i]];
+      if(baselineService.isEliglbe(commuterAccount)) {
+        uint distance = commuterAccount.baselineDistance());
+
+        totalBaselineEmissions += baselineService.emissionCalc(distance, commuterAccount.vehicleData)
+      }
+    }
+    return totalBaselineEmissions;
+  }
 }
-
-// contract BaselineTrip is Subtrip {
